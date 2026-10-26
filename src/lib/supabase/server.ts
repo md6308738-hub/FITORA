@@ -9,8 +9,9 @@ import { getSupabaseEnv } from "./env";
 
 /** Client Supabase côté serveur, lié aux cookies de la requête. Un client par requête. */
 export async function createClient() {
-  const { url, publishableKey } = getSupabaseEnv();
+  // Lire les cookies en premier : la page devient dynamique avant toute autre vérification.
   const cookieStore = await cookies();
+  const { url, publishableKey } = getSupabaseEnv();
 
   return createServerClient<Database>(url, publishableKey, {
     cookies: {
