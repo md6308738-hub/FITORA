@@ -80,7 +80,8 @@
 /*
  * Vitrine publique : noir profond et bleu électrique (prompt « FITORA 3D »).
  * Les jetons sont redéfinis localement ; l'application connectée garde le thème clair.
- * Le bouton utilise #0F6FDE (contraste 4,8:1 avec le blanc) ; #1687FF sert aux accents.
+ * Boutons au bleu de marque #0A45BD (texte blanc) ; #1687FF / #35B8FF restent pour les textes
+ * d'accent, car #0A45BD n'atteint pas le contraste requis sur fond noir.
  */
 .theme-vitrine {
   color-scheme: dark;
@@ -91,8 +92,8 @@
   --color-text: #f7f9fc;
   --color-text-secondary: #b9c3cf;
   --color-text-meta: #8d99a8;
-  --color-primary: #0f6fde;
-  --color-primary-hover: #0b5cc0;
+  --color-primary: #0a45bd;
+  --color-primary-hover: #0838a0;
   --color-primary-soft: #0d2440;
   --color-on-primary: #ffffff;
   --color-accent: #1687ff;

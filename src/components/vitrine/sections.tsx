@@ -95,7 +95,7 @@ export function SectionNutrition() {
     >
       <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
         <div>
-          <p className="text-xs font-semibold tracking-[0.22em] text-[#0f6fde] uppercase sm:text-sm">Nutrition</p>
+          <p className="text-xs font-semibold tracking-[0.22em] text-[#0a45bd] uppercase sm:text-sm">Nutrition</p>
           <h2 id="titre-nutrition" className="mt-3 font-display text-4xl leading-[0.95] font-extrabold tracking-tight uppercase sm:text-5xl">
             La performance se construit aussi dans l’assiette
           </h2>

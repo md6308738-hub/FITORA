@@ -30,28 +30,26 @@ export type Vec3 = readonly [number, number, number];
 export type Cadrage = { progression: number; position: Vec3; cible: Vec3 };
 
 /**
- * Séquence ordinateur : vue large → rapprochement de l'athlète → angle qui révèle
- * la profondeur → focus sur l'haltère → déplacement vers la zone des racks.
+ * Séquence ordinateur : 1) vue large de la salle et de l'athlète → 2) rapprochement →
+ * 3) gros plan sur l'haltère → 4) déplacement latéral vers les racks et les poulies →
+ * 5) recul panoramique vers la section suivante.
  */
 export const CADRAGES_ORDINATEUR: readonly Cadrage[] = [
-  { progression: 0, position: [-0.5, 1.45, 4.5], cible: [0.15, 1.1, 0] },
-  { progression: 0.3, position: [0.5, 1.35, 3.1], cible: [1.0, 1.0, 0] },
-  { progression: 0.55, position: [2.9, 1.35, 3.1], cible: [1.2, 1.05, 0] },
-  { progression: 0.75, position: [2.05, 1.2, 1.55], cible: [1.35, 1.1, 0.15] },
-  { progression: 1, position: [-0.6, 1.9, 3.4], cible: [-4.2, 1.0, -2.6] },
+  { progression: 0, position: [-1.0, 1.6, 5.6], cible: [0.3, 1.15, -0.3] },
+  { progression: 0.25, position: [0.5, 1.35, 3.0], cible: [1.05, 1.0, 0] },
+  { progression: 0.5, position: [1.85, 1.15, 1.55], cible: [1.08, 0.85, 0.35] },
+  { progression: 0.75, position: [-2.0, 1.5, 2.2], cible: [-3.6, 1.0, -4.5] },
+  { progression: 1, position: [-0.2, 2.7, 5.6], cible: [0.2, 1.0, -3.5] },
 ];
 
-/** Séquence verticale (mobile) : plus de recul, athlète dans la moitié haute, texte en bas. */
+/** Même séquence en format vertical : plus de recul, sujet dans la moitié haute (texte en bas). */
 export const CADRAGES_MOBILE: readonly Cadrage[] = [
-  { progression: 0, position: [1.15, 1.35, 6.3], cible: [1.15, 0.45, 0] },
-  { progression: 0.3, position: [1.2, 1.3, 4.6], cible: [1.15, 0.6, 0] },
-  { progression: 0.55, position: [2.8, 1.3, 3.9], cible: [1.2, 1.1, 0] },
-  { progression: 0.75, position: [2.0, 1.2, 2.3], cible: [1.3, 1.1, 0.15] },
-  { progression: 1, position: [-1.2, 1.8, 4.6], cible: [-4.2, 1.0, -2.6] },
+  { progression: 0, position: [1.15, 1.35, 6.8], cible: [1.15, 0.45, 0] },
+  { progression: 0.25, position: [1.2, 1.3, 4.6], cible: [1.15, 0.6, 0] },
+  { progression: 0.5, position: [1.6, 1.05, 1.6], cible: [1.1, 0.75, 0.3] },
+  { progression: 0.75, position: [-1.5, 1.5, 3.6], cible: [-4.2, 0.7, -3.6] },
+  { progression: 1, position: [-0.2, 3.0, 8.0], cible: [0.2, 0.6, -3.5] },
 ];
-
-/** Plage du défilement où le curl suit la molette (focus sur l'haltère). */
-export const PLAGE_CURL_PILOTE = [0.55, 0.78] as const;
 
 export type Qualite = "haute" | "basse";
 

@@ -50,7 +50,7 @@ export default function FitnessScene({ etat, qualite, anime, visible, onPrete }:
       <Suspense fallback={null}>
         <Lighting ombres={reglages.ombres} tailleOmbre={reglages.tailleOmbre} />
         <GymEnvironment halteresParRack={reglages.halteresParRack} />
-        <Athlete etat={etat} anime={anime} position={[1.25, 0, 0]} rotation={[0, -0.55, 0]} />
+        <Athlete anime={anime} position={[1.25, 0, 0]} rotation={[0, -0.55, 0]} />
         <SignalPret onPrete={onPrete} />
       </Suspense>
       <CameraRig etat={etat} anime={anime} />

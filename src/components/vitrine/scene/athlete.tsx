@@ -1,10 +1,9 @@
 "use client";
 
 import { useFrame, type ThreeElements } from "@react-three/fiber";
-import { useRef, type MutableRefObject } from "react";
+import { useRef } from "react";
 import type * as THREE from "three";
 
-import { PLAGE_CURL_PILOTE } from "./config";
 import { amplitudeCurl, poseCurl } from "./curl";
 import { Banc, Haltere } from "./equipment";
 import { MATERIAUX } from "./materials";
@@ -29,12 +28,10 @@ function Segment({ longueur, rayon, materiau = MATERIAUX.mannequin }: Membre) {
 
 export type EtatScene = { progression: number };
 
-type AthleteProps = ThreeElements["group"] & {
-  etat: MutableRefObject<EtatScene>;
-  anime: boolean;
-};
+type AthleteProps = ThreeElements["group"] & { anime: boolean };
 
-export function Athlete({ etat, anime, ...props }: AthleteProps) {
+/** Le défilement ne pilote que la caméra : le curl tourne en boucle, de façon autonome. */
+export function Athlete({ anime, ...props }: AthleteProps) {
   const temps = useRef(0);
   const amplitude = useRef(0);
   const colonne = useRef<THREE.Group>(null);
@@ -49,13 +46,7 @@ export function Athlete({ etat, anime, ...props }: AthleteProps) {
     const dt = Math.min(delta, 0.05);
     temps.current += dt;
 
-    // Hors du focus : mouvement autonome. Dans la plage de focus : le curl suit le défilement.
-    const [debut, fin] = PLAGE_CURL_PILOTE;
-    const p = etat.current.progression;
-    const dansFocus = p > debut && p < fin;
-    const cibleScroll = Math.sin(((p - debut) / (fin - debut)) * Math.PI);
-    const cible = dansFocus ? cibleScroll : amplitudeCurl(temps.current);
-    amplitude.current += (cible - amplitude.current) * Math.min(1, dt * 6);
+    amplitude.current += (amplitudeCurl(temps.current) - amplitude.current) * Math.min(1, dt * 6);
 
     const pose = poseCurl(amplitude.current);
     const respiration = Math.sin(temps.current * 1.6) * 0.5 + 0.5;
