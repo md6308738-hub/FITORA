@@ -1,26 +1,37 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Identité visuelle FITORA — voir CLAUDE.md, section « Identité visuelle ». */
+@theme {
+  --color-primary: #1141a6;
+  --color-primary-soft: #eaf0fb;
+  --color-surface: #ffffff;
+  --color-background: #f6f7f9;
+  --color-border: #e4e7ec;
+  --color-text: #101828;
+  --color-text-secondary: #475467;
+  --color-text-meta: #5d6676;
+  --color-error: #b42318;
+  --color-warning: #b54708;
+
+  --radius-card: 16px;
 }
 
+/* Les polices sont chargées par next/font dans app/layout.tsx. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
 }
