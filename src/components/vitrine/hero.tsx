@@ -3,117 +3,106 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight } from "lucide-react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { styleBouton } from "@/components/ui/button";
-import banniere from "../../../public/images/banniere-athlete.jpg";
+import posterMobile from "../../../public/images/hero-mobile.jpg";
+import posterOrdinateur from "../../../public/images/hero-ordinateur.jpg";
 
-import type { EtatScene } from "./scene/athlete";
-import { detecterQualite, webglDisponible, type Qualite } from "./scene/config";
-import { SceneBoundary } from "./scene/scene-boundary";
+/** Vraies vidéos filmées (Tima Miroshnichenko, licence Pexels — docs/credits-medias.md). */
+const VIDEOS = { ordinateur: "/videos/hero-ordinateur.mp4", mobile: "/videos/hero-mobile.mp4" } as const;
 
-// Three.js n'est chargé que côté navigateur, après le premier affichage du texte.
-const FitnessScene = dynamic(() => import("./scene/fitness-scene"), { ssr: false });
-
-type Support = { webgl: boolean; qualite: Qualite; reduit: boolean };
+/**
+ * - "defilement" : la vidéo avance et recule avec le défilement (ordinateur) ;
+ * - "boucle" : lecture automatique en boucle (écrans tactiles, où le défilement image par image saccade) ;
+ * - "fixe" : image seule (préférence « réduire les animations »).
+ */
+type Mode = "defilement" | "boucle" | "fixe";
+type Support = { mode: Mode; mobile: boolean };
 
 export function Hero() {
   const section = useRef<HTMLElement>(null);
+  const cadre = useRef<HTMLDivElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
   const texte = useRef<HTMLDivElement>(null);
   const titreSalle = useRef<HTMLDivElement>(null);
-  const etat = useRef<EtatScene>({ progression: 0 });
   const [support, setSupport] = useState<Support | null>(null);
-  const [visible, setVisible] = useState(true);
-  const [prete, setPrete] = useState(false);
-  const onPrete = useCallback(() => setPrete(true), []);
-  const onErreurScene = useCallback(
-    () => setSupport((actuel) => (actuel ? { ...actuel, webgl: false } : actuel)),
-    [],
-  );
+  const [videoPrete, setVideoPrete] = useState(false);
 
-  // Détection côté navigateur : WebGL, puissance de l'appareil, réduction des animations.
   useEffect(() => {
     const reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const tactile = window.matchMedia("(pointer: coarse)").matches;
+    const mobile = window.matchMedia("(max-width: 767px)").matches;
+    const mode: Mode = reduit ? "fixe" : tactile || mobile ? "boucle" : "defilement";
     // eslint-disable-next-line react-hooks/set-state-in-effect -- capacités connues seulement dans le navigateur
-    setSupport({ webgl: webglDisponible(), qualite: detecterQualite(), reduit });
+    setSupport({ mode, mobile });
   }, []);
 
-  // Le rendu 3D est suspendu quand la section n'est plus à l'écran.
+  // Défilement → avance de la vidéo et léger travelling, disparition du titre, chapitre « salle ».
   useEffect(() => {
-    const element = section.current;
-    if (!element) return;
-    const observateur = new IntersectionObserver(([entree]) => setVisible(Boolean(entree?.isIntersecting)));
-    observateur.observe(element);
-    return () => observateur.disconnect();
-  }, []);
-
-  // Défilement → progression de la caméra, disparition du titre, apparition du chapitre « salle ».
-  useEffect(() => {
-    if (!section.current || !support) return;
+    if (!section.current || !support || support.mode === "fixe") return;
     gsap.registerPlugin(ScrollTrigger);
     const contexte = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: section.current,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-        onUpdate: (instance) => {
-          etat.current.progression = instance.progress;
-        },
-      });
-      if (support.reduit) return;
+      const declencheur = { trigger: section.current, start: "top top", end: "bottom bottom" };
+      if (support.mode === "defilement") {
+        ScrollTrigger.create({
+          ...declencheur,
+          onUpdate: ({ progress }) => {
+            const element = video.current;
+            if (!element || !Number.isFinite(element.duration)) return;
+            gsap.to(element, { currentTime: progress * (element.duration - 0.1), duration: 0.35, ease: "power1.out", overwrite: true });
+          },
+        });
+      }
       gsap
-        .timeline({ scrollTrigger: { trigger: section.current, start: "top top", end: "bottom bottom", scrub: 0.6 } })
+        .timeline({ scrollTrigger: { ...declencheur, scrub: 0.6 } })
+        .fromTo(cadre.current, { scale: 1.08 }, { scale: 1, ease: "none", duration: 1 }, 0)
         .to(texte.current, { autoAlpha: 0, y: -40, ease: "none", duration: 0.18 }, 0.04)
         .fromTo(titreSalle.current, { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, ease: "none", duration: 0.12 }, 0.84);
     }, section);
     return () => contexte.revert();
   }, [support]);
 
-  const scene3d = support?.webgl === true;
+  const poster = support?.mobile ? posterMobile : posterOrdinateur;
 
   return (
     <section
       id="accueil"
       ref={section}
       aria-labelledby="titre-hero"
-      className={support?.reduit ? "relative" : "relative h-[320vh]"}
+      className={support?.mode === "fixe" ? "relative" : "relative h-[320vh]"}
     >
       <div className="sticky top-0 h-svh overflow-hidden">
-        {/* Arrière-plan : scène 3D, ou photo si WebGL est indisponible */}
-        <div className="absolute inset-0">
-          {scene3d && support ? (
-            <SceneBoundary onErreur={onErreurScene}>
-              <FitnessScene
-                etat={etat}
-                qualite={support.qualite}
-                anime={!support.reduit}
-                visible={visible}
-                onPrete={onPrete}
-              />
-            </SceneBoundary>
-          ) : null}
-          {support && !scene3d ? (
-            <Image
-              src={banniere}
-              alt="Athlète travaillant les biceps avec un haltère dans une salle de sport"
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              className="object-cover object-[42%_center]"
+        {/* Arrière-plan : vraie vidéo filmée, image fixe pendant le chargement ou en mode réduit */}
+        <div ref={cadre} className="absolute inset-0 will-change-transform">
+          <Image
+            src={poster}
+            alt="Athlète réalisant un curl avec des haltères dans une salle de sport"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[60%_center]"
+          />
+          {support && support.mode !== "fixe" ? (
+            <video
+              ref={video}
+              key={support.mobile ? "mobile" : "ordinateur"}
+              src={support.mobile ? VIDEOS.mobile : VIDEOS.ordinateur}
+              muted
+              playsInline
+              preload="auto"
+              autoPlay={support.mode === "boucle"}
+              loop={support.mode === "boucle"}
+              aria-hidden="true"
+              tabIndex={-1}
+              onCanPlay={() => setVideoPrete(true)}
+              className={`absolute inset-0 size-full object-cover object-[60%_center] transition-opacity duration-700 ${
+                videoPrete ? "opacity-100" : "opacity-0"
+              }`}
             />
           ) : null}
-          {/* Fondu d'entrée : la salle se révèle quand ses ressources sont prêtes */}
-          <div
-            aria-hidden="true"
-            className={`absolute inset-0 bg-background transition-opacity duration-[1600ms] ease-out ${
-              prete || (support && !scene3d) ? "opacity-0" : "opacity-100"
-            }`}
-          />
           {/* Voile de lisibilité côté texte uniquement */}
           <div
             aria-hidden="true"
@@ -143,19 +132,14 @@ export function Hero() {
               Commencer maintenant
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
-            {scene3d && !prete ? (
-              <p role="status" className="mt-6 text-xs tracking-[0.2em] text-white/50 uppercase">
-                Chargement de la salle…
-              </p>
-            ) : null}
           </div>
 
-          {/* Chapitre « la salle », révélé à la fin du travelling */}
+          {/* Chapitre « la salle », révélé à la fin du défilement */}
           <div
             ref={titreSalle}
             id="salle"
             className={`absolute right-5 bottom-[calc(env(safe-area-inset-bottom)+2.5rem)] left-5 max-w-lg sm:left-8 lg:left-12 ${
-              support?.reduit ? "hidden" : "invisible opacity-0"
+              support?.mode === "fixe" ? "hidden" : "invisible opacity-0"
             }`}
           >
             <h2 className="font-display text-4xl leading-none font-extrabold tracking-tight uppercase sm:text-5xl">

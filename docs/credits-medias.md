@@ -14,16 +14,11 @@ Toute nouvelle image doit être ajoutée à ce tableau avec sa source et sa lice
 | `public/images/programme-force.jpg` | Victor Freitas | [Unsplash — qZ-U9z4TQ6A](https://unsplash.com/photos/qZ-U9z4TQ6A) |
 | `public/images/nutrition-jollof.jpg` | Keesha's Kitchen | [Unsplash — woC24wGXsQ8](https://unsplash.com/photos/a-bowl-of-food-woC24wGXsQ8) |
 
-## Ressources 3D (Poly Haven, licence CC0 — domaine public)
+## Vidéos du hero (licence Pexels : usage commercial autorisé, sans attribution obligatoire)
 
-| Fichier | Ressource | Auteurs |
+| Fichier | Auteur | Source |
 | --- | --- | --- |
-| `public/3d/hdri/climbing_gym_1k.hdr` | [Climbing Gym](https://polyhaven.com/a/climbing_gym) | Dimitrios Savva, Jarod Guest |
-| `public/3d/textures/rubber_tiles_*` | [Rubber Tiles](https://polyhaven.com/a/rubber_tiles) | Amal Kumar |
-| `public/3d/textures/brushed_concrete_*` | [Brushed Concrete](https://polyhaven.com/a/brushed_concrete) | Dario Barresi, Dimitrios Savva |
+| `public/videos/hero-ordinateur.mp4` (+ `public/images/hero-ordinateur.jpg`) | Tima Miroshnichenko | [Pexels — 5319099](https://www.pexels.com/video/a-man-working-out-using-dumbbell-5319099/) |
+| `public/videos/hero-mobile.mp4` (+ `public/images/hero-mobile.jpg`) | Tima Miroshnichenko | [Pexels — 5319426](https://www.pexels.com/video/man-doing-arm-workout-at-gym-5319426/) |
 
-## Athlète 3D
-
-Mannequin **provisoire** modélisé dans le code (`src/components/vitrine/scene/athlete.tsx`).
-Pour un rendu photoréaliste, il faut un modèle GLB riggé avec une animation de curl, sous licence
-commerciale ; le déclarer dans `RESSOURCES.athlete` (`src/components/vitrine/scene/config.ts`).
+Vidéos recompressées (H.264 sans son, image clé toutes les 0,5 s pour le défilement image par image).
