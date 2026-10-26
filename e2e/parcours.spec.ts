@@ -1,32 +1,78 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import {
+  MOT_DE_PASSE_TEST,
+  creerUtilisateurConfirme,
+  emailTest,
+  supabaseConfigure,
+  supprimerUtilisateur,
+  supprimerUtilisateurParEmail,
+} from "./outils/supabase";
+
 /**
- * Parcours complet inscription → questionnaire → accueil, sur le projet Supabase
- * configuré dans .env.local. Prérequis : migration appliquée et confirmation
- * par email désactivée (sinon l'inscription s'arrête sur « vérifiez vos emails »).
+ * Parcours sur le projet Supabase configuré dans .env.local (migration appliquée).
+ * Les comptes de test sont supprimés à la fin.
  */
-test.skip(
-  !process.env.NEXT_PUBLIC_SUPABASE_URL,
-  "Supabase n'est pas configuré (.env.local).",
-);
+test.skip(!supabaseConfigure, "Supabase n'est pas configuré (.env.local).");
 
 const continuer = (page: Page) => page.getByRole("button", { name: "Continuer" }).click();
 const etape = (page: Page, n: number) => expect(page.getByText(`Étape ${n} sur 9`)).toBeVisible();
 
-test("inscription, questionnaire puis accueil personnalisé", async ({ page }, testInfo) => {
-  const domaine = process.env.E2E_EMAIL_DOMAIN ?? "example.com";
-  const email = `e2e-${testInfo.project.name}-${Date.now()}@${domaine}`;
-
-  // Inscription
-  await page.goto("/inscription");
-  await page.getByLabel("Prénom").fill("Awa");
-  await page.getByLabel("Nom", { exact: true }).fill("Ndiaye");
+async function seConnecter(page: Page, email: string) {
+  await page.goto("/connexion");
   await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Mot de passe", { exact: true }).fill("motdepasse1");
-  await page.getByLabel("Confirmation du mot de passe").fill("motdepasse1");
-  await page.getByRole("button", { name: "Créer mon compte" }).click();
-  await expect(page).toHaveURL(/\/onboarding$/);
+  await page.getByLabel("Mot de passe").fill(MOT_DE_PASSE_TEST);
+  await page.getByRole("button", { name: "Se connecter" }).click();
+}
 
+test("connexion, questionnaire puis accueil personnalisé", async ({ page }) => {
+  const compte = await creerUtilisateurConfirme("Awa", "Ndiaye");
+  try {
+    // Un compte sans questionnaire terminé est envoyé vers celui-ci.
+    await seConnecter(page, compte.email);
+    await expect(page).toHaveURL(/\/onboarding$/);
+    await remplirQuestionnaire(page);
+    await verifierAccueil(page);
+
+    // Déconnexion puis retour : l'accueil est conservé.
+    await page.goto("/profil");
+    await page.getByRole("main").getByRole("button", { name: "Se déconnecter" }).click();
+    await expect(page).toHaveURL(/\/connexion$/);
+    await seConnecter(page, compte.email);
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole("heading", { name: "Bonjour, Awa" })).toBeVisible();
+  } finally {
+    await supprimerUtilisateur(compte.id);
+  }
+});
+
+// Nécessite la confirmation par email désactivée dans Supabase.
+test("inscription jusqu'au questionnaire", async ({ page }) => {
+  test.skip(process.env.E2E_INSCRIPTION !== "1", "E2E_INSCRIPTION=1 requis (confirmation email désactivée).");
+  const email = emailTest("inscription");
+  try {
+    await page.goto("/inscription");
+    await page.getByLabel("Prénom").fill("Awa");
+    await page.getByLabel("Nom", { exact: true }).fill("Ndiaye");
+    await page.getByLabel("Email").fill(email);
+    await page.getByLabel("Mot de passe", { exact: true }).fill(MOT_DE_PASSE_TEST);
+    await page.getByLabel("Confirmation du mot de passe").fill(MOT_DE_PASSE_TEST);
+    await page.getByRole("button", { name: "Créer mon compte" }).click();
+    await expect(page).toHaveURL(/\/onboarding$/);
+    await etape(page, 1);
+  } finally {
+    await supprimerUtilisateurParEmail(email);
+  }
+});
+
+test("un visiteur non connecté est renvoyé vers la connexion", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveURL(/\/connexion$/);
+  await page.goto("/onboarding");
+  await expect(page).toHaveURL(/\/connexion$/);
+});
+
+async function remplirQuestionnaire(page: Page) {
   // 1. Mensurations (avec vérification de la validation)
   await etape(page, 1);
   await continuer(page);
@@ -77,7 +123,9 @@ test("inscription, questionnaire puis accueil personnalisé", async ({ page }, t
   await etape(page, 9);
   await page.getByText("Modérément actif", { exact: true }).click();
   await page.getByRole("button", { name: "Terminer" }).click();
+}
 
+async function verifierAccueil(page: Page) {
   // Accueil personnalisé
   await expect(page).toHaveURL(/\/$/);
   await expect(page.getByRole("heading", { name: "Bonjour, Awa" })).toBeVisible();
@@ -102,9 +150,4 @@ test("inscription, questionnaire puis accueil personnalisé", async ({ page }, t
   // Un utilisateur connecté ne revoit pas le questionnaire terminé
   await page.goto("/onboarding");
   await expect(page).toHaveURL(/\/$/);
-});
-
-test("un visiteur non connecté est renvoyé vers la connexion", async ({ page }) => {
-  await page.goto("/");
-  await expect(page).toHaveURL(/\/connexion$/);
-});
+}

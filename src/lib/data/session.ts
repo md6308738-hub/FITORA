@@ -1,6 +1,7 @@
 import "server-only";
 
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { cache } from "react";
 
 import { createClient } from "@/lib/supabase/server";
@@ -11,6 +12,8 @@ import type { Profil } from "@/types/database";
  * Redirige vers la connexion sans session valide.
  */
 export const exigerUtilisateur = cache(async () => {
+  // Données propres à l'utilisateur et à l'instant présent : rendu à chaque requête.
+  await connection();
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const userId = data?.claims?.sub;

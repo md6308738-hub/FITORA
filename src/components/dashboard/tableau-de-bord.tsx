@@ -69,7 +69,7 @@ export async function TableauDeBord() {
   return (
     <div className="space-y-6">
       <header className="animate-apparition">
-        <p className="text-sm font-medium text-text-meta capitalize">
+        <p className="text-sm font-medium text-text-meta first-letter:uppercase">
           {new Intl.DateTimeFormat("fr-FR", {
             weekday: "long",
             day: "numeric",
