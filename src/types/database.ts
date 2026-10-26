@@ -72,6 +72,71 @@ export type PriseEau = {
   cree_le: string;
 };
 
+export type StatutProgramme = "propose" | "actif" | "archive";
+export type StatutSeance = "en_cours" | "terminee" | "annulee";
+
+export type Programme = {
+  id: string;
+  user_id: string;
+  titre: string;
+  objectif: ObjectifPrincipal;
+  niveau: NiveauSportif;
+  jours_par_semaine: number;
+  duree_seance_min: number;
+  statut: StatutProgramme;
+  variante: number;
+  cree_le: string;
+  active_le: string | null;
+};
+
+export type ProgrammeSeance = {
+  id: string;
+  programme_id: string;
+  user_id: string;
+  ordre: number;
+  nom: string;
+  jour_semaine: number;
+};
+
+export type ProgrammeExercice = {
+  id: string;
+  seance_id: string;
+  user_id: string;
+  ordre: number;
+  exercice_id: string;
+  series: number;
+  reps_min: number | null;
+  reps_max: number | null;
+  duree_sec: number | null;
+  repos_sec: number;
+};
+
+export type Seance = {
+  id: string;
+  user_id: string;
+  programme_seance_id: string | null;
+  nom: string;
+  commencee_le: string;
+  terminee_le: string | null;
+  statut: StatutSeance;
+  notes: string | null;
+};
+
+export type SerieRealisee = {
+  id: number;
+  seance_id: string;
+  user_id: string;
+  exercice_id: string;
+  numero: number;
+  charge_kg: number | null;
+  repetitions: number | null;
+  duree_sec: number | null;
+  enregistree_le: string;
+};
+
+/** Colonnes générées par la base, facultatives à l'insertion. */
+type Insertion<T, Auto extends keyof T> = Omit<T, Auto> & Partial<Pick<T, Auto>>;
+
 type ProfilModifiable = Partial<
   Omit<Profil, "id" | "cree_le" | "modifie_le">
 >;
@@ -97,6 +162,36 @@ export type Database = {
         Update: never;
         Relationships: [];
       };
+      programmes: {
+        Row: Programme;
+        Insert: Insertion<Programme, "id" | "user_id" | "statut" | "variante" | "cree_le" | "active_le">;
+        Update: Partial<Omit<Programme, "id" | "user_id">>;
+        Relationships: [];
+      };
+      programme_seances: {
+        Row: ProgrammeSeance;
+        Insert: Insertion<ProgrammeSeance, "id" | "user_id">;
+        Update: Partial<Pick<ProgrammeSeance, "jour_semaine" | "nom">>;
+        Relationships: [];
+      };
+      programme_exercices: {
+        Row: ProgrammeExercice;
+        Insert: Insertion<ProgrammeExercice, "id" | "user_id">;
+        Update: Partial<Omit<ProgrammeExercice, "id" | "user_id" | "seance_id">>;
+        Relationships: [];
+      };
+      seances: {
+        Row: Seance;
+        Insert: Insertion<Seance, "user_id" | "commencee_le" | "terminee_le" | "statut" | "notes">;
+        Update: Partial<Pick<Seance, "terminee_le" | "statut" | "notes">>;
+        Relationships: [];
+      };
+      series_realisees: {
+        Row: SerieRealisee;
+        Insert: Insertion<SerieRealisee, "id" | "user_id" | "enregistree_le">;
+        Update: Partial<Pick<SerieRealisee, "charge_kg" | "repetitions" | "duree_sec">>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -107,6 +202,8 @@ export type Database = {
       materiel_disponible: MaterielDisponible;
       budget_alimentaire: BudgetAlimentaire;
       niveau_activite: NiveauActivite;
+      statut_programme: StatutProgramme;
+      statut_seance: StatutSeance;
     };
     CompositeTypes: Record<string, never>;
   };
