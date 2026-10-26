@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
-import { EmptyState } from "@/components/ui/empty-state";
-import { PageHeader } from "@/components/ui/page-header";
+import { TableauDeBord, TableauDeBordChargement } from "@/components/dashboard/tableau-de-bord";
 
 export const metadata: Metadata = { title: "Accueil" };
 
 export default function HomePage() {
   return (
-    <>
-      <PageHeader
-        title="Accueil"
-        description="Votre tableau de bord FITORA."
-      />
-      <EmptyState
-        title="Aucune donnée pour le moment"
-        description="Votre résumé de la semaine apparaîtra ici dès que vous aurez enregistré vos premières séances."
-      />
-    </>
+    // Les données dépendent de la session : elles arrivent après la requête.
+    <Suspense fallback={<TableauDeBordChargement />}>
+      <TableauDeBord />
+    </Suspense>
   );
 }
