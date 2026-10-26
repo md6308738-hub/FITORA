@@ -15,6 +15,8 @@
   --color-text-meta: #5d6676;
   --color-error: #b42318;
   --color-warning: #b54708;
+  --color-accent: #1687ff;
+  --color-accent-clair: #35b8ff;
 
   --radius-card: 18px;
 
@@ -73,4 +75,28 @@
       transition-duration: 0.01ms !important;
     }
   }
+}
+
+/*
+ * Vitrine publique : noir profond et bleu électrique (prompt « FITORA 3D »).
+ * Les jetons sont redéfinis localement ; l'application connectée garde le thème clair.
+ * Le bouton utilise #0F6FDE (contraste 4,8:1 avec le blanc) ; #1687FF sert aux accents.
+ */
+.theme-vitrine {
+  color-scheme: dark;
+  --color-background: #080b10;
+  --color-surface: #0f141c;
+  --color-surface-raised: #161d27;
+  --color-border: #232c38;
+  --color-text: #f7f9fc;
+  --color-text-secondary: #b9c3cf;
+  --color-text-meta: #8d99a8;
+  --color-primary: #0f6fde;
+  --color-primary-hover: #0b5cc0;
+  --color-primary-soft: #0d2440;
+  --color-on-primary: #ffffff;
+  --color-accent: #1687ff;
+  --color-accent-clair: #35b8ff;
+  background-color: var(--color-background);
+  color: var(--color-text);
 }

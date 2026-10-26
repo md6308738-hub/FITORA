@@ -7,8 +7,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Toutes les routes sauf les fichiers statiques et les images.
+  // Toutes les routes sauf les fichiers statiques, les images et les ressources 3D.
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|3d/|images/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|hdr|glb|gltf)$).*)",
   ],
 };

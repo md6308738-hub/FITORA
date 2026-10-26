@@ -13,6 +13,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: { default: "FITORA", template: "%s · FITORA" },
   description: "Coaching sportif, nutrition et bien-être.",
 };

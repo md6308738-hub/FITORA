@@ -67,7 +67,7 @@ test("inscription jusqu'au questionnaire", async ({ page }) => {
 
 test("un visiteur non connecté voit la vitrine et ne peut pas accéder à l'application", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Atteins tes objectifs" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Atteins tes objectifs" })).toBeVisible();
   await page.getByRole("link", { name: "Commencer maintenant" }).click();
   await expect(page).toHaveURL(/\/inscription$/);
   await page.goto("/onboarding");
