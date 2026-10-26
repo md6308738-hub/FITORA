@@ -2,19 +2,19 @@
 
 /* Identité visuelle FITORA — voir CLAUDE.md, section « Identité visuelle ». */
 @theme {
-  --color-primary: #c6f432;
-  --color-primary-hover: #d4f75e;
-  --color-primary-soft: #232b0e;
-  --color-on-primary: #0b0d0f;
-  --color-background: #0b0d0f;
-  --color-surface: #14171a;
-  --color-surface-raised: #1c2024;
-  --color-border: #2a2f35;
-  --color-text: #f5f7f8;
-  --color-text-secondary: #b0b7c0;
-  --color-text-meta: #8f98a3;
-  --color-error: #f97066;
-  --color-warning: #fdb022;
+  --color-primary: #0a45bd;
+  --color-primary-hover: #0838a0;
+  --color-primary-soft: #e8eefb;
+  --color-on-primary: #ffffff;
+  --color-background: #f5f7fb;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f2f4f8;
+  --color-border: #e1e6ef;
+  --color-text: #0f172a;
+  --color-text-secondary: #475467;
+  --color-text-meta: #5d6676;
+  --color-error: #b42318;
+  --color-warning: #b54708;
 
   --radius-card: 18px;
 
@@ -40,7 +40,7 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {

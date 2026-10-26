@@ -12,11 +12,12 @@ Le cahier des charges complet est dans `docs/cahier-des-charges.md` : s’y réf
 - Tests : Vitest (unitaires), Playwright (parcours complets)
 
 ## Identité visuelle
-- Thème sombre ; jetons définis dans `src/app/globals.css` (`@theme`), à utiliser plutôt que des couleurs en dur
-- Accent vert citron `#C6F432` (actions principales, éléments actifs, indicateurs importants), texte sur l’accent `#0B0D0F`
-- Fond `#0B0D0F`, cartes `#14171A` (surélevées `#1C2024`), bordures `#2A2F35`
-- Texte : `#F5F7F8` (principal), `#B0B7C0` (secondaire), `#8F98A3` (métadonnées)
-- Erreur `#F97066`, avertissement `#FDB022`
+- Thème clair ; jetons définis dans `src/app/globals.css` (`@theme`), à utiliser plutôt que des couleurs en dur
+- Bleu `#0A45BD` (boutons, éléments interactifs, éléments actifs, accents), texte sur le bleu `#FFFFFF`
+- Surfaces blanches `#FFFFFF`, fond `#F5F7FB`, surfaces secondaires `#F2F4F8`, bordures `#E1E6EF`
+- Texte : `#0F172A` (principal), `#475467` (secondaire), `#5D6676` (métadonnées)
+- Erreur `#B42318`, avertissement `#B54708`
+- Page vitrine : photo réelle sous licence libre (sources dans `docs/credits-medias.md`), voile sombre uniquement pour la lisibilité du texte
 - Animations discrètes uniquement (apparition courte), désactivées si `prefers-reduced-motion`
 - Polices : Manrope (titres), Inter (texte)
 - Cartes : rayon 16–18 px, bordure fine, pas d’ombre lourde
