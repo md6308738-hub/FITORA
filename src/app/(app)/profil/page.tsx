@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { LogoutButton } from "@/components/auth/logout-button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
 
@@ -13,9 +14,12 @@ export default function ProfilPage() {
         description="Vos informations personnelles."
       />
       <EmptyState
-        title="Profil incomplet"
-        description="Les informations de votre profil apparaîtront ici."
+        title="Profil en préparation"
+        description="La modification de vos informations arrivera prochainement. Vos réponses au questionnaire sont enregistrées."
       />
+      <div className="mt-6 max-w-xs">
+        <LogoutButton className="border border-border" />
+      </div>
     </>
   );
 }
