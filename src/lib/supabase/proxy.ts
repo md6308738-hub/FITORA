@@ -6,9 +6,9 @@ import type { Database } from "@/types/database";
 import { isSupabaseConfigured, getSupabaseEnv } from "./env";
 
 /** Pages accessibles sans être connecté. */
-const ROUTES_PUBLIQUES = ["/connexion", "/inscription", "/auth"];
+const ROUTES_PUBLIQUES = ["/bienvenue", "/connexion", "/inscription", "/auth"];
 /** Pages réservées aux visiteurs non connectés. */
-const ROUTES_INVITE = ["/connexion", "/inscription"];
+const ROUTES_INVITE = ["/bienvenue", "/connexion", "/inscription"];
 
 function commencePar(pathname: string, routes: string[]): boolean {
   return routes.some(
@@ -65,6 +65,16 @@ export async function updateSession(request: NextRequest) {
     return reponse;
   };
 
+  // Sur « / », le visiteur voit la page vitrine ; l'utilisateur connecté, son tableau de bord.
+  if (!connecte && pathname === "/") {
+    const vitrine = request.nextUrl.clone();
+    vitrine.pathname = "/bienvenue";
+    const reponse = NextResponse.rewrite(vitrine);
+    for (const cookie of response.cookies.getAll()) {
+      reponse.cookies.set(cookie);
+    }
+    return reponse;
+  }
   if (!connecte && !commencePar(pathname, ROUTES_PUBLIQUES)) {
     return redirection("/connexion");
   }

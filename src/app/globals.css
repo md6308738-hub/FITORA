@@ -19,6 +19,16 @@
   --radius-card: 18px;
 
   --animate-apparition: apparition 0.35s ease-out both;
+  --animate-recul: recul 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes recul {
+    from {
+      transform: scale(1.06);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
 
   @keyframes apparition {
     from {

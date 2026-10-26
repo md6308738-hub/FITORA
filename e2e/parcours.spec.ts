@@ -65,9 +65,11 @@ test("inscription jusqu'au questionnaire", async ({ page }) => {
   }
 });
 
-test("un visiteur non connecté est renvoyé vers la connexion", async ({ page }) => {
+test("un visiteur non connecté voit la vitrine et ne peut pas accéder à l'application", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveURL(/\/connexion$/);
+  await expect(page.getByRole("heading", { name: "Atteins tes objectifs" })).toBeVisible();
+  await page.getByRole("link", { name: "Commencer maintenant" }).click();
+  await expect(page).toHaveURL(/\/inscription$/);
   await page.goto("/onboarding");
   await expect(page).toHaveURL(/\/connexion$/);
 });
