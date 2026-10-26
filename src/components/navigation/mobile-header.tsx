@@ -18,7 +18,7 @@ export function MobileHeader() {
           href="/"
           className="font-display text-lg font-extrabold tracking-tight text-primary"
         >
-          FITORA
+          MOVA
         </Link>
         <Link
           href={PROFILE_NAV_ITEM.href}

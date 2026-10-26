@@ -1,4 +1,6 @@
-# FITORA — Contexte du projet pour Claude Code
+# MOVA — Contexte du projet pour Claude Code
+
+(Anciennement FITORA ; le dossier du projet garde ce nom.)
 
 Plateforme SaaS de coaching sportif, nutrition et bien-être. Marché de lancement : Sénégal (Afrique francophone ensuite). Langue de l’interface : français.
 Le cahier des charges complet est dans `docs/cahier-des-charges.md` : s’y référer avant toute décision fonctionnelle.
@@ -12,10 +14,12 @@ Le cahier des charges complet est dans `docs/cahier-des-charges.md` : s’y réf
 - Tests : Vitest (unitaires), Playwright (parcours complets)
 
 ## Identité visuelle
-- Couleur principale : `#1141A6` (actions principales, éléments actifs, indicateurs importants)
-- Blanc `#FFFFFF`, fond `#F6F7F9`, bordures `#E4E7EC`
-- Texte : `#101828` (principal), `#475467` (secondaire), `#5D6676` (métadonnées)
-- Erreur `#B42318`, avertissement `#B54708`
+- Thème sombre ; jetons définis dans `src/app/globals.css` (`@theme`), à utiliser plutôt que des couleurs en dur
+- Accent vert citron `#C6F432` (actions principales, éléments actifs, indicateurs importants), texte sur l’accent `#0B0D0F`
+- Fond `#0B0D0F`, cartes `#14171A` (surélevées `#1C2024`), bordures `#2A2F35`
+- Texte : `#F5F7F8` (principal), `#B0B7C0` (secondaire), `#8F98A3` (métadonnées)
+- Erreur `#F97066`, avertissement `#FDB022`
+- Animations discrètes uniquement (apparition courte), désactivées si `prefers-reduced-motion`
 - Polices : Manrope (titres), Inter (texte)
 - Cartes : rayon 16–18 px, bordure fine, pas d’ombre lourde
 - Interdit : dégradés décoratifs, effets lumineux, emoji dans l’interface, illustrations génériques

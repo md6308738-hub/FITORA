@@ -38,7 +38,7 @@ export function Sidebar() {
         href="/"
         className="mb-8 px-3 font-display text-xl font-extrabold tracking-tight text-primary"
       >
-        FITORA
+        MOVA
       </Link>
       <nav aria-label="Navigation principale" className="flex flex-1 flex-col">
         <ul className="flex flex-col gap-1">

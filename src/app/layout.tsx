@@ -13,13 +13,13 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: { default: "FITORA", template: "%s · FITORA" },
+  title: { default: "MOVA", template: "%s · MOVA" },
   description: "Coaching sportif, nutrition et bien-être.",
 };
 
 export const viewport: Viewport = {
   viewportFit: "cover",
-  themeColor: "#ffffff",
+  themeColor: "#0b0d0f",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
