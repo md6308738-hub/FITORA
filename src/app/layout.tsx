@@ -13,7 +13,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: { default: "MOVA", template: "%s · MOVA" },
+  title: { default: "FITORA", template: "%s · FITORA" },
   description: "Coaching sportif, nutrition et bien-être.",
 };
 

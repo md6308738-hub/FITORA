@@ -1,6 +1,4 @@
-# MOVA — Contexte du projet pour Claude Code
-
-(Anciennement FITORA ; le dossier du projet garde ce nom.)
+# FITORA — Contexte du projet pour Claude Code
 
 Plateforme SaaS de coaching sportif, nutrition et bien-être. Marché de lancement : Sénégal (Afrique francophone ensuite). Langue de l’interface : français.
 Le cahier des charges complet est dans `docs/cahier-des-charges.md` : s’y référer avant toute décision fonctionnelle.

@@ -10,7 +10,7 @@ export default function HomePage() {
     <>
       <PageHeader
         title="Accueil"
-        description="Votre tableau de bord MOVA."
+        description="Votre tableau de bord FITORA."
       />
       <EmptyState
         title="Aucune donnée pour le moment"
