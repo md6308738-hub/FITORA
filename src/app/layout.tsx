@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 
@@ -13,8 +13,13 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "FITORA",
+  title: { default: "FITORA", template: "%s · FITORA" },
   description: "Coaching sportif, nutrition et bien-être.",
+};
+
+export const viewport: Viewport = {
+  viewportFit: "cover",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
