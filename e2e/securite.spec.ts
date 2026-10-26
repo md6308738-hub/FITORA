@@ -50,6 +50,30 @@ test("un utilisateur n'accède jamais aux données d'un autre", async () => {
     const profilAwa = await clientAwa.from("profils").select("prenom").single();
     expect(profilAwa.data?.prenom).toBe("Awa");
 
+    // Programmes et séances : invisibles et non modifiables par un autre compte.
+    const programme = await clientAwa
+      .from("programmes")
+      .insert({ titre: "Test", objectif: "force", niveau: "debutant", jours_par_semaine: 3, duree_seance_min: 45 })
+      .select("id")
+      .single();
+    expect(programme.error).toBeNull();
+    const seanceType = await clientAwa
+      .from("programme_seances")
+      .insert({ programme_id: programme.data?.id ?? "", ordre: 1, nom: "A", jour_semaine: 1 })
+      .select("id")
+      .single();
+    expect(seanceType.error).toBeNull();
+    expect((await clientMoussa.from("programmes").select("*")).data).toEqual([]);
+    // Moussa ne peut pas rattacher une séance au programme d'Awa.
+    const intrusion = await clientMoussa
+      .from("programme_seances")
+      .insert({ programme_id: programme.data?.id ?? "", ordre: 2, nom: "Intrus", jour_semaine: 2 });
+    expect(intrusion.error).not.toBeNull();
+    const seanceVolee = await clientMoussa
+      .from("seances")
+      .insert({ id: crypto.randomUUID(), programme_seance_id: seanceType.data?.id ?? null, nom: "Intrus" });
+    expect(seanceVolee.error).not.toBeNull();
+
     // Un visiteur anonyme n'a aucun accès.
     const anonyme = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
@@ -57,6 +81,8 @@ test("un utilisateur n'accède jamais aux données d'un autre", async () => {
     );
     expect((await anonyme.from("profils").select("*")).error).not.toBeNull();
     expect((await anonyme.from("pesees").select("*")).error).not.toBeNull();
+    expect((await anonyme.from("programmes").select("*")).error).not.toBeNull();
+    expect((await anonyme.from("seances").select("*")).error).not.toBeNull();
   } finally {
     await supprimerUtilisateur(awa.id);
     await supprimerUtilisateur(moussa.id);

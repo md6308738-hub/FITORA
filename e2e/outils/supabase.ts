@@ -60,3 +60,26 @@ export async function clientConnecte(email: string): Promise<SupabaseClient<Data
   if (error) throw error;
   return client;
 }
+
+/** Remplit le questionnaire d'un compte de test (raccourci pour les parcours qui le supposent terminé). */
+export async function completerProfil(id: string, valeurs: Partial<Database["public"]["Tables"]["profils"]["Update"]> = {}) {
+  const { error } = await admin()
+    .from("profils")
+    .update({
+      age: 29,
+      taille_cm: 175,
+      sexe: "homme",
+      objectif: "prise_de_masse",
+      niveau: "intermediaire",
+      activites: ["musculation"],
+      jours_par_semaine: 3,
+      duree_seance_min: 45,
+      materiel: "salle",
+      niveau_activite: "modere",
+      onboarding_etape: 9,
+      onboarding_termine_le: new Date().toISOString(),
+      ...valeurs,
+    })
+    .eq("id", id);
+  if (error) throw error;
+}

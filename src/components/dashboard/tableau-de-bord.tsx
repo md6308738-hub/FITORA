@@ -11,6 +11,7 @@ import { calculerStatistiques } from "@/lib/calculs/statistiques";
 import { decalerJour, formaterDateCourte, jourLocal, jourSemaine } from "@/lib/dates";
 import { getPrisesEauDepuis } from "@/lib/data/hydratation";
 import { getPesees } from "@/lib/data/pesees";
+import { getProgramme } from "@/lib/data/programmes";
 import { exigerProfilComplet } from "@/lib/data/session";
 import {
   OPTIONS_ACTIVITE,
@@ -32,9 +33,10 @@ const litres = (ml: number) =>
 export async function TableauDeBord() {
   const profil = await exigerProfilComplet();
   const aujourdhui = jourLocal();
-  const [pesees, prises] = await Promise.all([
+  const [pesees, prises, programme] = await Promise.all([
     getPesees(),
     getPrisesEauDepuis(decalerJour(aujourdhui, -6)),
+    getProgramme("actif"),
   ]);
 
   const premiere = pesees[0];
@@ -59,8 +61,13 @@ export async function TableauDeBord() {
         })
       : null;
 
+  const jour = jourSemaine();
+  const seancesTriees = [...(programme?.seances ?? [])].sort((a, b) => a.jour_semaine - b.jour_semaine);
+  const seanceProgramme = seancesTriees.find((s) => s.jour_semaine === jour);
+  const prochaineSeance = seancesTriees.find((s) => s.jour_semaine > jour) ?? seancesTriees[0];
+
   const seance = profil.jours_par_semaine
-    ? seanceDuJour(profil.jours_par_semaine, profil.activites, jourSemaine())
+    ? seanceDuJour(profil.jours_par_semaine, profil.activites, jour)
     : null;
 
   const eauAujourdhui = totalParJour(prises).get(aujourdhui) ?? 0;
@@ -143,7 +150,28 @@ export async function TableauDeBord() {
         {/* Séance du jour */}
         <Card aria-labelledby="titre-seance">
           <CardTitle id="titre-seance">Entraînement du jour</CardTitle>
-          {seance?.prevue ? (
+          {programme ? (
+            <div className="mt-4">
+              <div className="flex items-center gap-3">
+                <span className={`flex size-11 items-center justify-center rounded-xl ${seanceProgramme ? "bg-primary text-on-primary" : "bg-surface-raised text-text-secondary"}`}>
+                  {seanceProgramme ? <Dumbbell aria-hidden="true" className="size-5" /> : <Moon aria-hidden="true" className="size-5" />}
+                </span>
+                <div>
+                  <p className="font-display text-xl font-bold">{seanceProgramme?.nom ?? "Jour de repos"}</p>
+                  <p className="text-sm text-text-secondary">
+                    {seanceProgramme
+                      ? `${seanceProgramme.exercices.length} exercices · ${programme.duree_seance_min} min`
+                      : prochaineSeance
+                        ? `Prochaine séance : ${prochaineSeance.nom}, ${NOMS_JOURS[prochaineSeance.jour_semaine]}`
+                        : null}
+                  </p>
+                </div>
+              </div>
+              <Link href="/seance" className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline">
+                {seanceProgramme ? "Ouvrir la séance" : "Voir mes séances"}
+              </Link>
+            </div>
+          ) : seance?.prevue ? (
             <div className="mt-4">
               <div className="flex items-center gap-3">
                 <span className="flex size-11 items-center justify-center rounded-xl bg-primary text-on-primary">
@@ -188,9 +216,14 @@ export async function TableauDeBord() {
               </div>
             </div>
           )}
-          <p className="mt-4 text-xs text-text-meta">
-            Planning suggéré d’après vos disponibilités. Le programme détaillé arrive avec le module Entraînement.
-          </p>
+          {programme ? null : (
+            <p className="mt-4 text-xs text-text-meta">
+              Planning suggéré d’après vos disponibilités.{" "}
+              <Link href="/programmes" className="font-semibold text-primary hover:underline">
+                Générer mon programme
+              </Link>
+            </p>
+          )}
         </Card>
 
         {/* Nutrition */}
