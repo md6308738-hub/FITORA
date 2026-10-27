@@ -66,7 +66,7 @@ test("programme : proposition, validation, séance enregistrée et historique", 
     // Bibliothèque : recherche et fiche
     await page.goto("/programmes/exercices");
     await page.getByLabel("Rechercher").fill("traction");
-    await page.getByRole("link", { name: /^Tractions$/ }).first().click();
+    await page.getByRole("link", { name: /^Tractions Dos/ }).click();
     await expect(page.getByRole("heading", { name: "Tractions", level: 1 })).toBeVisible();
     await expect(page.getByText("Erreurs courantes")).toBeVisible();
   } finally {
