@@ -9,10 +9,12 @@ import { styleBouton } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
-import { jourSemaine } from "@/lib/dates";
+import { signauxSante } from "@/lib/calculs/sante";
+import { jourLocal, jourSemaine } from "@/lib/dates";
 import { getProgramme, getSeancesDuProgramme, type SeanceComplete } from "@/lib/data/programmes";
 import { getDernieresPerformances, getHistorique, getSeanceEnCours, getSeriesDeSeance } from "@/lib/data/seances";
 import { exigerProfilComplet } from "@/lib/data/session";
+import { getJournalSante } from "@/lib/data/suivi";
 import { trouverExercice } from "@/lib/exercices/catalogue";
 import { suggererCharge } from "@/lib/programmes/generateur";
 import type { Seance, SerieRealisee } from "@/types/database";
@@ -97,11 +99,17 @@ function ApercuSeance({ seance }: { seance: SeanceComplete }) {
 }
 
 async function ContenuSeance() {
-  await exigerProfilComplet();
+  const profil = await exigerProfilComplet();
   const enCours = await getSeanceEnCours();
   if (enCours) return <SeanceEnCours seance={enCours} />;
 
-  const [programme, historique] = await Promise.all([getProgramme("actif"), getHistorique()]);
+  const [programme, historique, journal] = await Promise.all([
+    getProgramme("actif"),
+    getHistorique(),
+    profil.consentement_sante_le ? getJournalSante(jourLocal()) : Promise.resolve([]),
+  ]);
+  const sante = journal[0];
+  const signaux = signauxSante(sante ? { fatigue: sante.fatigue, douleurIntensite: sante.douleur_intensite, sommeilMin: sante.sommeil_min } : null);
   const aujourdhui = jourSemaine();
   const seances = programme ? await getSeancesDuProgramme(programme.id) : [];
   const duJour = seances.find((s) => s.jour_semaine === aujourdhui);
@@ -110,6 +118,11 @@ async function ContenuSeance() {
   return (
     <>
       <PageHeader title="Séance" description="Lance ta séance et enregistre chaque série." />
+      {signaux.map((s) => (
+        <p key={s.message} role="status" className="mb-4 rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-sm">
+          {s.message}
+        </p>
+      ))}
       {!programme ? (
         <div className="space-y-4">
           <EmptyState
