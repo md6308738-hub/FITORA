@@ -64,6 +64,7 @@ test("profil, consentement santé, journal de santé et export des données", as
     // Retrait du consentement : données de santé effacées
     await page.getByRole("button", { name: "Retirer mon consentement" }).click();
     await page.getByRole("button", { name: "Oui, retirer" }).click();
+    await expect(page.getByRole("button", { name: "J’accepte le suivi de mes données de santé" })).toBeVisible();
     await page.goto("/sante");
     await expect(page.getByRole("button", { name: "J’accepte le suivi de mes données de santé" })).toBeVisible();
   });
@@ -78,7 +79,7 @@ test("progrès : mensuration, objectif et bilan", async ({ page }) => {
     await expect(page.getByText("Mesure enregistrée.")).toBeVisible();
     await expect(page.getByText(/1 mesure enregistrée/).first()).toBeVisible();
 
-    await page.getByLabel("Objectif", { exact: true }).selectOption("hydratation");
+    await page.getByRole("combobox", { name: /^Objectif/ }).selectOption("hydratation");
     await page.getByLabel(/Cible/).fill("2000");
     await page.getByRole("button", { name: "Ajouter l’objectif" }).click();
     await expect(page.getByText("Eau par jour : 2 000 ml")).toBeVisible();

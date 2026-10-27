@@ -16,6 +16,7 @@ const COULEUR = "var(--color-primary)";
 const AXE = { fontSize: 12, fill: "var(--color-text-meta)" };
 
 const nombreFr = (v: number, unite: string) => `${v.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} ${unite}`;
+const graduation = (v: number) => v.toLocaleString("fr-FR", { maximumFractionDigits: 1 });
 
 /** Bouton bascule graphique / tableau (le tableau est la vue accessible des données). */
 function Bascule({ tableau, onChange }: { tableau: boolean; onChange: (v: boolean) => void }) {
@@ -71,10 +72,10 @@ export function GraphiqueEvolution({
       {visibles.length > 0 && !tableau ? (
         <div className="mt-3 h-56" aria-hidden="true">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={visibles} margin={{ top: 8, right: 12, bottom: 0, left: -12 }}>
+            <LineChart data={visibles} margin={{ top: 8, right: 12, bottom: 0, left: 4 }}>
               <CartesianGrid stroke="var(--color-border)" vertical={false} />
               <XAxis dataKey="jour" tickFormatter={formaterDateCourte} tick={AXE} tickLine={false} axisLine={false} minTickGap={24} />
-              <YAxis domain={["auto", "auto"]} tick={AXE} tickLine={false} axisLine={false} width={48} />
+              <YAxis domain={["auto", "auto"]} tick={AXE} tickLine={false} axisLine={false} width={56} tickFormatter={graduation} />
               <Tooltip
                 formatter={(v) => [nombreFr(Number(v), unite), titre]}
                 labelFormatter={(l) => formaterDateCourte(String(l))}
@@ -123,7 +124,7 @@ export function GraphiqueSeances({ donnees, cible }: { donnees: { semaine: strin
       ) : (
         <div className="mt-3 h-48" aria-hidden="true">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={donnees} margin={{ top: 8, right: 12, bottom: 0, left: -24 }} barCategoryGap={4}>
+            <BarChart data={donnees} margin={{ top: 8, right: 12, bottom: 0, left: 0 }} barCategoryGap={4}>
               <CartesianGrid stroke="var(--color-border)" vertical={false} />
               <XAxis dataKey="semaine" tickFormatter={formaterDateCourte} tick={AXE} tickLine={false} axisLine={false} minTickGap={16} />
               <YAxis allowDecimals={false} tick={AXE} tickLine={false} axisLine={false} width={40} />

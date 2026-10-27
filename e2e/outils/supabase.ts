@@ -82,4 +82,9 @@ export async function completerProfil(id: string, valeurs: Partial<Database["pub
     })
     .eq("id", id);
   if (error) throw error;
+  // Une pesée du jour, comme après le questionnaire (nécessaire aux estimations nutritionnelles).
+  const { error: erreurPesee } = await admin()
+    .from("pesees")
+    .insert({ user_id: id, mesure_le: new Date().toISOString().slice(0, 10), poids_kg: 80 });
+  if (erreurPesee) throw erreurPesee;
 }

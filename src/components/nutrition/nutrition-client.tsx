@@ -7,26 +7,9 @@ import { ajouterRepas, genererPlanRepas, supprimerRepas } from "@/app/(app)/nutr
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { ALIMENTS, apports, trouverAliment, type Categorie } from "@/lib/nutrition/aliments";
+import { CATEGORIES, MOMENTS } from "@/lib/nutrition/libelles";
 import { apportsElements, listeDeCourses, type Plan } from "@/lib/nutrition/plan";
 import type { MomentRepas } from "@/types/database";
-
-export const MOMENTS: { valeur: MomentRepas; libelle: string }[] = [
-  { valeur: "petit_dejeuner", libelle: "Petit-déjeuner" },
-  { valeur: "dejeuner", libelle: "Déjeuner" },
-  { valeur: "diner", libelle: "Dîner" },
-  { valeur: "collation", libelle: "Collation" },
-];
-
-export const CATEGORIES: Record<Categorie, string> = {
-  feculent: "Féculents",
-  petit_dejeuner: "Petit-déjeuner",
-  legumineuse: "Légumineuses et arachide",
-  proteine: "Viandes, poissons, œufs",
-  laitier: "Produits laitiers",
-  legume: "Légumes",
-  fruit: "Fruits",
-  matiere_grasse: "Matières grasses",
-};
 
 const CHAMP = "min-h-11 w-full rounded-xl border border-border bg-surface-raised px-3 text-base focus-visible:outline-2 focus-visible:outline-primary";
 const kcal = (v: number) => `${Math.round(v).toLocaleString("fr-FR")} kcal`;

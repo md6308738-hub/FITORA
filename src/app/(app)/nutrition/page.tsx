@@ -2,7 +2,8 @@ import { TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { AjoutRepas, BoutonsPlan, BoutonSupprimerRepas, MOMENTS, PlanSemaine } from "@/components/nutrition/nutrition-client";
+import { AjoutRepas, BoutonsPlan, BoutonSupprimerRepas, PlanSemaine } from "@/components/nutrition/nutrition-client";
+import { MOMENTS } from "@/lib/nutrition/libelles";
 import { Card, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { ProgressBar } from "@/components/ui/progress-bar";

@@ -36,7 +36,7 @@ test("connexion, questionnaire puis accueil personnalisé", async ({ page }) => 
 
     // Déconnexion puis retour : l'accueil est conservé.
     await page.goto("/profil");
-    await page.getByRole("main").getByRole("button", { name: "Se déconnecter" }).click();
+    await page.getByRole("main").getByRole("button", { name: "Se déconnecter", exact: true }).click();
     await expect(page).toHaveURL(/\/connexion$/);
     await seConnecter(page, compte.email);
     await expect(page).toHaveURL(/\/$/);
