@@ -66,6 +66,11 @@ export function ConnexionForm() {
         error={errors.motDePasse?.message}
         {...register("motDePasse")}
       />
+      <p className="-mt-1 text-right text-sm">
+        <Link href="/mot-de-passe-oublie" className="font-medium text-primary hover:underline">
+          Mot de passe oublié ?
+        </Link>
+      </p>
       <Button type="submit" enCours={enCours} className="w-full">
         Se connecter
       </Button>

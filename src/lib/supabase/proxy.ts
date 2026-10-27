@@ -6,9 +6,9 @@ import type { Database } from "@/types/database";
 import { isSupabaseConfigured, getSupabaseEnv } from "./env";
 
 /** Pages accessibles sans être connecté. */
-const ROUTES_PUBLIQUES = ["/bienvenue", "/connexion", "/inscription", "/auth"];
+const ROUTES_PUBLIQUES = ["/bienvenue", "/connexion", "/inscription", "/mot-de-passe-oublie", "/auth"];
 /** Pages réservées aux visiteurs non connectés. */
-const ROUTES_INVITE = ["/bienvenue", "/connexion", "/inscription"];
+const ROUTES_INVITE = ["/bienvenue", "/connexion", "/inscription", "/mot-de-passe-oublie"];
 
 function commencePar(pathname: string, routes: string[]): boolean {
   return routes.some(

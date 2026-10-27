@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 
-/** Lien de confirmation reçu par email : ouvre la session puis envoie vers le questionnaire. */
+/** Lien reçu par email (confirmation ou réinitialisation) : ouvre la session puis redirige. */
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const code = searchParams.get("code");
@@ -21,9 +21,13 @@ export async function GET(request: NextRequest) {
     reussi = !error;
   }
 
+  // Destinations autorisées après le lien (pas de redirection ouverte).
+  const suivant = searchParams.get("suivant");
+  const destination = suivant === "/nouveau-mot-de-passe" || type === "recovery" ? "/nouveau-mot-de-passe" : "/onboarding";
+
   const cible = request.nextUrl.clone();
   cible.search = "";
-  cible.pathname = reussi ? "/onboarding" : "/connexion";
+  cible.pathname = reussi ? destination : "/connexion";
   if (!reussi) {
     cible.searchParams.set("erreur", "lien-invalide");
   }

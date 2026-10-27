@@ -52,6 +52,8 @@ export type Profil = {
   blessures: string | null;
   onboarding_etape: number;
   onboarding_termine_le: string | null;
+  consentement_sante_le: string | null;
+  consentement_sante_version: number | null;
   cree_le: string;
   modifie_le: string;
 };
@@ -134,6 +136,58 @@ export type SerieRealisee = {
   enregistree_le: string;
 };
 
+export type TypeMensuration = "tour_de_taille" | "hanches" | "poitrine" | "bras" | "cuisse" | "masse_grasse";
+export type TypeObjectif = "poids" | "seances_semaine" | "hydratation" | "pas";
+export type StatutObjectif = "en_cours" | "atteint" | "abandonne";
+export type MomentRepas = "petit_dejeuner" | "dejeuner" | "diner" | "collation";
+
+export type Mensuration = { id: number; user_id: string; mesure_le: string; type: TypeMensuration; valeur: number };
+
+export type Objectif = {
+  id: string;
+  user_id: string;
+  type: TypeObjectif;
+  cible: number;
+  debut_le: string;
+  echeance_le: string | null;
+  statut: StatutObjectif;
+  cree_le: string;
+};
+
+export type RepasEntree = {
+  id: number;
+  user_id: string;
+  consomme_le: string;
+  moment: MomentRepas;
+  aliment_id: string;
+  quantite_g: number;
+  cree_le: string;
+};
+
+export type PlanRepas = {
+  id: string;
+  user_id: string;
+  kcal_cible: number;
+  variante: number;
+  contenu: unknown;
+  cree_le: string;
+};
+
+export type JournalSante = {
+  id: number;
+  user_id: string;
+  jour: string;
+  sommeil_min: number | null;
+  qualite_sommeil: number | null;
+  fatigue: number | null;
+  pas: number | null;
+  douleur_zone: string | null;
+  douleur_intensite: number | null;
+  note: string | null;
+  source: "manuel";
+  modifie_le: string;
+};
+
 /** Colonnes générées par la base, facultatives à l'insertion. */
 type Insertion<T, Auto extends keyof T> = Omit<T, Auto> & Partial<Pick<T, Auto>>;
 
@@ -192,6 +246,36 @@ export type Database = {
         Update: Partial<Pick<SerieRealisee, "charge_kg" | "repetitions" | "duree_sec">>;
         Relationships: [];
       };
+      mensurations: {
+        Row: Mensuration;
+        Insert: Insertion<Mensuration, "id" | "user_id">;
+        Update: Partial<Pick<Mensuration, "valeur">>;
+        Relationships: [];
+      };
+      objectifs: {
+        Row: Objectif;
+        Insert: Insertion<Objectif, "id" | "user_id" | "debut_le" | "echeance_le" | "statut" | "cree_le">;
+        Update: Partial<Pick<Objectif, "cible" | "echeance_le" | "statut">>;
+        Relationships: [];
+      };
+      repas_entrees: {
+        Row: RepasEntree;
+        Insert: Insertion<RepasEntree, "id" | "user_id" | "cree_le">;
+        Update: Partial<Pick<RepasEntree, "quantite_g" | "moment">>;
+        Relationships: [];
+      };
+      plans_repas: {
+        Row: PlanRepas;
+        Insert: Insertion<PlanRepas, "id" | "user_id" | "variante" | "cree_le">;
+        Update: never;
+        Relationships: [];
+      };
+      journal_sante: {
+        Row: JournalSante;
+        Insert: Insertion<JournalSante, "id" | "user_id" | "source" | "modifie_le">;
+        Update: Partial<Omit<JournalSante, "id" | "user_id" | "jour" | "source">>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -204,6 +288,10 @@ export type Database = {
       niveau_activite: NiveauActivite;
       statut_programme: StatutProgramme;
       statut_seance: StatutSeance;
+      type_mensuration: TypeMensuration;
+      type_objectif: TypeObjectif;
+      statut_objectif: StatutObjectif;
+      moment_repas: MomentRepas;
     };
     CompositeTypes: Record<string, never>;
   };

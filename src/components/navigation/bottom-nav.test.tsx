@@ -15,7 +15,7 @@ describe("BottomNav", () => {
     render(<BottomNav />);
 
     expect(screen.getAllByRole("link")).toHaveLength(5);
-    expect(screen.getByRole("link", { name: "Séance" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Entraînement" })).toHaveAttribute(
       "aria-current",
       "page",
     );

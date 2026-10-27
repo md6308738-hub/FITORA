@@ -88,6 +88,16 @@ async function ContenuProgrammes() {
             </div>
             {propose ? null : <BoutonGenerer libelle="Demander une nouvelle proposition" />}
           </div>
+          {!propose &&
+          (actif.objectif !== profil.objectif ||
+            actif.niveau !== profil.niveau ||
+            actif.jours_par_semaine !== profil.jours_par_semaine ||
+            actif.duree_seance_min !== profil.duree_seance_min) ? (
+            <p role="status" className="flex gap-2 rounded-xl border border-primary/30 bg-primary-soft px-4 py-3 text-sm text-text">
+              <TriangleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />
+              Ton profil a changé depuis la création de ce programme : demande une nouvelle proposition pour l’adapter.
+            </p>
+          ) : null}
           <ListeSeances programme={actif} modifiable />
         </section>
       ) : null}

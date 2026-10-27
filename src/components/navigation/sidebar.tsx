@@ -48,7 +48,7 @@ export function Sidebar() {
             <li key={item.href}>
               <SidebarLink
                 item={item}
-                active={isNavItemActive(pathname, item.href)}
+                active={isNavItemActive(pathname, item.href, item.autres)}
               />
             </li>
           ))}

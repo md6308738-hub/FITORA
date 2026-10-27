@@ -1,4 +1,4 @@
-import { ChartLine, Dumbbell, Moon, Target, Timer } from "lucide-react";
+import { Apple, ChartLine, Dumbbell, HeartPulse, Moon, Target, Timer } from "lucide-react";
 import Link from "next/link";
 
 import { Card, CardTitle } from "@/components/ui/card";
@@ -305,10 +305,10 @@ export async function TableauDeBord() {
       {/* Accès rapide */}
       <nav aria-label="Accès rapide" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          { href: "/programmes", nom: "Programmes", icone: Dumbbell },
           { href: "/seance", nom: "Séance", icone: Timer },
-          { href: "/progression", nom: "Progression", icone: ChartLine },
-          { href: "/objectifs", nom: "Objectifs", icone: Target },
+          { href: "/nutrition", nom: "Nutrition", icone: Apple },
+          { href: "/progression", nom: "Progrès", icone: ChartLine },
+          { href: "/sante", nom: "Santé", icone: HeartPulse },
         ].map(({ href, nom, icone: Icone }) => (
           <Link
             key={href}

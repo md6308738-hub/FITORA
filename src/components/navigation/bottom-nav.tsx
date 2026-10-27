@@ -17,7 +17,7 @@ export function BottomNav() {
       <ul className="flex">
         {MAIN_NAV_ITEMS.map((item) => {
           const Icon = item.icon;
-          const active = isNavItemActive(pathname, item.href);
+          const active = isNavItemActive(pathname, item.href, item.autres);
           return (
             <li key={item.href} className="flex-1">
               <Link

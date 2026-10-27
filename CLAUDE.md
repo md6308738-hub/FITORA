@@ -23,7 +23,7 @@ Le cahier des charges complet est dans `docs/cahier-des-charges.md` : s’y réf
 - Cartes : rayon 16–18 px, bordure fine, pas d’ombre lourde
 - Interdit : dégradés décoratifs, effets lumineux, emoji dans l’interface, illustrations génériques
 - Zones tactiles ≥ 44 px, contraste texte ≥ 4,5:1
-- Navigation : barre latérale sur ordinateur, barre en bas sur mobile (Accueil, Programmes, Séance, Progrès, Objectifs) + Profil
+- Navigation (cahier des charges § 5.1) : barre latérale sur ordinateur, barre en bas sur mobile (Accueil, Entraînement [programmes + séance], Nutrition, Progrès [mesures + objectifs], Santé) + Profil
 
 ## Organisation du code
 ```

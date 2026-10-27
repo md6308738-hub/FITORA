@@ -30,6 +30,8 @@ const profilVide: Profil = {
   blessures: null,
   onboarding_etape: 0,
   onboarding_termine_le: null,
+  consentement_sante_le: null,
+  consentement_sante_version: null,
   cree_le: "2026-10-26T10:00:00Z",
   modifie_le: "2026-10-26T10:00:00Z",
 };
