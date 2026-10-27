@@ -272,7 +272,7 @@ export type Database = {
       };
       journal_sante: {
         Row: JournalSante;
-        Insert: Insertion<JournalSante, "id" | "user_id" | "source" | "modifie_le">;
+        Insert: Partial<Omit<JournalSante, "id" | "jour">> & { jour: string };
         Update: Partial<Omit<JournalSante, "id" | "user_id" | "jour" | "source">>;
         Relationships: [];
       };
