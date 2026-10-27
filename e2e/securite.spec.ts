@@ -74,6 +74,13 @@ test("un utilisateur n'accède jamais aux données d'un autre", async () => {
       .insert({ id: crypto.randomUUID(), programme_seance_id: seanceType.data?.id ?? null, nom: "Intrus" });
     expect(seanceVolee.error).not.toBeNull();
 
+    // Santé : aucune écriture sans consentement explicite, même pour soi.
+    const sansConsentement = await clientAwa.from("journal_sante").insert({ jour: "2026-10-26", fatigue: 3 });
+    expect(sansConsentement.error).not.toBeNull();
+    // Repas : invisibles pour un autre compte.
+    expect((await clientAwa.from("repas_entrees").insert({ consomme_le: "2026-10-26", moment: "dejeuner", aliment_id: "riz-blanc", quantite_g: 200 })).error).toBeNull();
+    expect((await clientMoussa.from("repas_entrees").select("*")).data).toEqual([]);
+
     // Un visiteur anonyme n'a aucun accès.
     const anonyme = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
