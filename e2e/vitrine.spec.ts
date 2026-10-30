@@ -1,13 +1,20 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("page vitrine", () => {
-  test("affiche le hero sur une vraie vidéo filmée", async ({ page }) => {
+  test("affiche le nouveau hero et sa vidéo de présentation", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1, name: "Atteins tes objectifs" })).toBeVisible();
-    await expect(page.getByText("TA FORCE. TON RYTHME. TON ÉVOLUTION.")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Voir la vidéo" })).toHaveCount(0);
-    await expect(page.locator("#accueil video")).toBeAttached();
-    await expect(page.locator("#accueil video")).toHaveJSProperty("muted", true);
+    await expect(page.getByRole("heading", { level: 1, name: "Une meilleure version de toi" })).toBeVisible();
+    await expect(page.getByText("TON PARTENAIRE FITNESS")).toBeVisible();
+    await expect(page.getByRole("img", { name: /Athlète réalisant un exercice de musculation/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Commencer maintenant" })).toHaveAttribute("href", "/inscription");
+    await expect(page.getByRole("heading", { level: 2, name: "Des solutions complètes pour ta progression" })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Voir la vidéo/ })).toBeVisible();
+    await expect(page.getByRole("dialog", { name: "Vidéo de présentation FITORA" })).toBeHidden();
+    await page.getByRole("button", { name: /Voir la vidéo/ }).click();
+    await expect(page.getByRole("dialog", { name: "Vidéo de présentation FITORA" })).toBeVisible();
+    await expect(page.getByRole("dialog").locator("video[controls]")).toBeAttached();
+    await page.getByRole("button", { name: "Fermer" }).click();
+    await expect(page.getByRole("dialog", { name: "Vidéo de présentation FITORA" })).toBeHidden();
   });
 
   test("chaque lien de navigation mène à sa section", async ({ page, isMobile }) => {
@@ -48,28 +55,16 @@ test.describe("page vitrine", () => {
     await expect(page).toHaveURL(/\/inscription$/);
   });
 
-  test("sur ordinateur, la vidéo avance et recule avec le défilement", async ({ page, isMobile }) => {
-    test.skip(isMobile, "Sur mobile, la vidéo tourne en boucle.");
-    await page.goto("/");
-    const video = page.locator("#accueil video");
-    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.readyState)).toBeGreaterThanOrEqual(1);
-    const hauteur = await page.locator("#accueil").evaluate((el) => el.scrollHeight - innerHeight);
-    await page.evaluate((y) => scrollTo(0, y), Math.round(hauteur * 0.6));
-    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(5);
-    await page.evaluate(() => scrollTo(0, 0));
-    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeLessThan(1);
-  });
-
-  test("respecte la préférence « réduire les animations »", async ({ browser }) => {
+  test("respecte la préférence « réduire les animations » sans créer de long défilement", async ({ browser }) => {
     const contexte = await browser.newContext({ reducedMotion: "reduce" });
     const page = await contexte.newPage();
     await page.goto("/");
     await expect(page.locator("#accueil video")).toHaveCount(0);
-    // Pas de longue zone de défilement animée : le hero tient en un écran (une fois la préférence lue).
+    // Le hero en pile reste compact sur mobile et ne crée pas le long scroll cinématique d’avant.
     const ecran = await page.evaluate(() => innerHeight);
     await expect
       .poll(() => page.locator("#accueil").evaluate((el) => el.getBoundingClientRect().height))
-      .toBeLessThanOrEqual(ecran + 1);
+      .toBeLessThanOrEqual(ecran * 1.6);
     await contexte.close();
   });
 });

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { CarteMuscles, IllustrationExercice } from "@/components/exercices/illustration-exercice";
 import { Card, CardTitle } from "@/components/ui/card";
 import { CATALOGUE, LIBELLES_MATERIEL, alternatives, trouverExercice } from "@/lib/exercices/catalogue";
 import { OPTIONS_NIVEAU, libelle } from "@/lib/onboarding/options";
@@ -28,31 +29,39 @@ export default async function FicheExercicePage({ params }: PageProps<"/programm
         Bibliothèque
       </Link>
       <header className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">{exercice.nom}</h1>
-        <p className="mt-1 text-text-secondary">
-          {exercice.groupe}
-          {exercice.secondaires.length > 0 ? ` · ${exercice.secondaires.join(", ")}` : ""}
-        </p>
-        <p className="mt-3 flex flex-wrap gap-2 text-sm">
-          {exercice.materiel.map((m) => (
-            <span key={m} className="rounded-full bg-primary-soft px-3 py-1 font-medium text-primary">
-              {LIBELLES_MATERIEL[m]}
-            </span>
-          ))}
-          <span className="rounded-full bg-surface-raised px-3 py-1 text-text-secondary">{libelle(OPTIONS_NIVEAU, exercice.niveau)}</span>
-        </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">{exercice.nom}</h1>
+            <p className="mt-1 text-text-secondary">
+              {exercice.groupe}
+              {exercice.secondaires.length > 0 ? ` · ${exercice.secondaires.join(", ")}` : ""}
+            </p>
+            <p className="mt-3 flex flex-wrap gap-2 text-sm">
+              {exercice.materiel.map((m) => (
+                <span key={m} className="rounded-full bg-primary-soft px-3 py-1 font-medium text-primary">
+                  {LIBELLES_MATERIEL[m]}
+                </span>
+              ))}
+              <span className="rounded-full bg-surface-raised px-3 py-1 text-text-secondary">{libelle(OPTIONS_NIVEAU, exercice.niveau)}</span>
+            </p>
+          </div>
+          <CarteMuscles exercice={exercice} />
+        </div>
       </header>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card aria-labelledby="titre-consignes" className="lg:col-span-2">
           <CardTitle id="titre-consignes">Exécution</CardTitle>
+          <div className="mt-4">
+            <IllustrationExercice exercice={exercice} />
+          </div>
           <ol className="mt-3 list-decimal space-y-2 pl-5">
             {exercice.consignes.map((c) => (
               <li key={c}>{c}</li>
             ))}
           </ol>
           <p className="mt-4 text-xs text-text-meta">
-            Pas encore de vidéo pour cet exercice : ces consignes ne remplacent pas la démonstration d’un professionnel.
+            Schéma pédagogique simplifié, non médical. En cas de douleur ou de doute technique, arrête l’exercice et demande conseil à un professionnel qualifié.
           </p>
         </Card>
         {exercice.precautions.length > 0 ? (

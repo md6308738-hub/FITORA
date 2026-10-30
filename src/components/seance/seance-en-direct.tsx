@@ -5,8 +5,10 @@ import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 
 import { annulerSeance, enregistrerSerie, terminerSeance } from "@/app/(app)/seance/actions";
+import { IllustrationExerciceParId } from "@/components/exercices/illustration-exercice";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
+import { trouverExercice } from "@/lib/exercices/catalogue";
 
 export type ExerciceSeance = {
   exerciceId: string;
@@ -116,6 +118,7 @@ function LigneSerie({
 function BlocExercice({ seanceId, exercice, onRepos }: { seanceId: string; exercice: ExerciceSeance; onRepos: (secondes: number) => void }) {
   const dejaFaites = Math.max(0, ...exercice.enregistrees.map((s) => s.numero));
   const [nombreSeries, setNombreSeries] = useState(Math.max(exercice.series, dejaFaites));
+  const fiche = trouverExercice(exercice.exerciceId);
   return (
     <section aria-label={exercice.nom} className="rounded-card border border-border bg-surface p-5">
       <header>
@@ -128,6 +131,25 @@ function BlocExercice({ seanceId, exercice, onRepos }: { seanceId: string; exerc
         {exercice.derniereFois ? <p className="mt-1 text-sm text-text-meta">Dernière fois : {exercice.derniereFois}</p> : null}
         {exercice.suggestion ? <p className="mt-1 text-sm font-medium text-primary">{exercice.suggestion.raison}</p> : null}
       </header>
+      {fiche ? (
+        <div className="mt-4 grid gap-4 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+          <IllustrationExerciceParId exerciceId={exercice.exerciceId} />
+          <div className="rounded-xl bg-surface-raised p-4">
+            <h3 className="font-semibold">Comment faire</h3>
+            <ol className="mt-2 list-decimal space-y-2 pl-5 text-sm text-text-secondary">
+              {fiche.consignes.map((consigne) => <li key={consigne}>{consigne}</li>)}
+            </ol>
+            {fiche.precautions.length > 0 ? (
+              <div className="mt-3 border-t border-border pt-3">
+                <h4 className="text-sm font-semibold">À garder en tête</h4>
+                <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-text-secondary">
+                  {fiche.precautions.map((precaution) => <li key={precaution}>{precaution}</li>)}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
       <ol className="mt-2 divide-y divide-border">
         {Array.from({ length: nombreSeries }, (_, i) => i + 1).map((numero) => (
           <LigneSerie

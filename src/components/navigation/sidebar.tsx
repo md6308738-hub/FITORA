@@ -35,7 +35,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-border bg-surface px-4 py-6 lg:flex">
+    <aside className="fixed inset-y-0 left-0 hidden w-56 flex-col border-r border-border bg-surface px-3 py-6 lg:flex">
       <Link
         href="/"
         className="mb-8 px-3 font-display text-xl font-extrabold tracking-tight text-primary"

@@ -8,8 +8,8 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
     <>
       <Sidebar />
       <MobileHeader />
-      <div className="lg:pl-64">
-        <main className="mx-auto w-full max-w-5xl px-4 pt-6 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:px-8 lg:py-10">
+      <div className="lg:pl-56">
+        <main className="w-full px-4 pt-5 pb-[calc(5rem+env(safe-area-inset-bottom))] sm:px-6 lg:px-8 lg:py-8 2xl:px-10">
           {children}
         </main>
       </div>

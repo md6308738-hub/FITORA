@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 
@@ -46,18 +46,25 @@ const PROGRAMMES: { titre: string; texte: string; image: StaticImageData; alt: s
 
 export function SectionProgrammes() {
   return (
-    <section id="programmes" aria-labelledby="titre-programmes" className="scroll-mt-20 px-5 py-24 sm:px-8 lg:px-12 lg:py-36">
-      <div className="mx-auto max-w-7xl">
-        <Surtitre>Programmes</Surtitre>
-        <TitreSection id="titre-programmes">
-          Trouve <span className="text-accent">ton rythme</span>
-        </TitreSection>
-        <ul className="mt-12 grid gap-4 md:grid-cols-3">
+    <section id="programmes" aria-labelledby="titre-programmes" className="scroll-mt-16 bg-white px-5 py-12 text-[#0f172a] sm:px-8 lg:px-12 lg:py-16">
+      <div className="mx-auto grid max-w-7xl items-center gap-8 xl:grid-cols-[minmax(18rem,0.9fr)_minmax(0,2.1fr)]">
+        <div>
+          <span aria-hidden="true" className="block h-px w-8 bg-accent-clair" />
+          <span aria-hidden="true" className="mt-3 block h-0.5 w-8 bg-primary" />
+          <Surtitre><span className="text-primary">Tout pour atteindre tes objectifs</span></Surtitre>
+          <h2 id="titre-programmes" className="mt-3 font-display text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl">
+            Des solutions complètes pour ta progression
+          </h2>
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-[#475467] sm:text-base">
+            Entraînement, nutrition et suivi réunis dans des outils adaptés à ton profil et à ton rythme.
+          </p>
+        </div>
+        <ul className="grid gap-3 sm:grid-cols-3">
           {PROGRAMMES.map((programme) => (
             <li key={programme.titre}>
               <Link
                 href="/inscription"
-                className="group relative flex aspect-[4/5] overflow-hidden rounded-card focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                className="group relative flex aspect-[1.22/1] min-h-40 overflow-hidden rounded-xl border border-border focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:aspect-[0.95/1] xl:aspect-[1.1/1]"
               >
                 <Image
                   src={programme.image}
@@ -66,14 +73,14 @@ export function SectionProgrammes() {
                   sizes="(min-width: 768px) 33vw, 100vw"
                   className={`object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] ${programme.position}`}
                 />
-                <span aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-black/85 via-black/20 to-transparent" />
-                <span className="relative mt-auto flex w-full items-end justify-between gap-4 p-6">
+                <span aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-[#030811]/95 via-[#030811]/15 to-transparent" />
+                <span className="relative mt-auto flex w-full items-end justify-between gap-2 p-3 sm:p-4">
                   <span>
-                    <span className="block font-display text-2xl font-extrabold uppercase">{programme.titre}</span>
-                    <span className="mt-1 block text-sm text-white/80">{programme.texte}</span>
+                    <span className="block font-display text-base font-bold text-white">{programme.titre}</span>
+                    <span className="mt-1 block text-xs text-white/75">{programme.texte}</span>
                   </span>
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary text-white transition-colors group-hover:bg-accent">
-                    <ArrowUpRight aria-hidden="true" className="size-5" />
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/50 bg-black/20 text-white transition-colors group-hover:bg-primary">
+                    <ArrowRight aria-hidden="true" className="size-4" />
                     <span className="sr-only">Commencer ce programme</span>
                   </span>
                 </span>
